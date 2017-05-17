@@ -1,0 +1,11 @@
+{
+  "generator-openapi-repo": {
+    "importExistingSpec": true,
+    "importedSpec": "/Users/swang/code/email/src/swagger.yaml",
+    "name": "Simple Email Service",
+    "repo": "revenuewire/email-redoc",
+    "splitSpec": false,
+    "samples": true,
+    "installSwaggerUI": true
+  }
+}

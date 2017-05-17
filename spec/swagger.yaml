@@ -1,0 +1,445 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: RevenueWire Simple Email Service
+  description: A simple email service
+
+basePath: /
+schemes:
+  - https
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+securityDefinitions:
+  APIKeyHeader:
+       type: apiKey
+       in: header
+       name: X-Authorization-JWT
+
+security:
+  - APIKeyHeader: []
+
+paths:
+  /templates:
+    get:
+      tags:
+        - Templates
+      description: Get all templates
+      operationId: getTemplates
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/template'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/error'
+    post:
+      tags:
+        - Templates
+      description: Create a new template
+      operationId: addTemplate
+      parameters:
+        - name: template
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/newTemplate"
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/template'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+  /templates/{id}:
+    get:
+      tags:
+        - Templates
+      description: Get a template
+      operationId: getTemplate
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/template'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      tags:
+        - Templates
+      description: Update a template
+      operationId: updateTemplate
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+        - in: formData
+          name: name
+          description: Template Name
+          required: true
+          type: string
+        - in: formData
+          name: defaultLanguage
+          description: Default Language
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/template'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      tags:
+        - Templates
+      description: Delete a template
+      operationId: deleteTemplate
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/template'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+  /templates/{id}/contents:
+    post:
+      tags:
+        - Templates
+      description: Add new template content (new language)
+      operationId: addNewContent
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+        - in: formData
+          name: lang
+          required: true
+          type: string
+        - in: formData
+          name: subject
+          required: true
+          type: string
+        - in: formData
+          name: body
+          description: HTML formatted message body
+          required: true
+          type: string
+        - in: formData
+          name: text
+          description: Text formatted message boday
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/templateContent'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+  /templates/{id}/contents/{contentId}:
+    get:
+      tags:
+        - Templates
+      operationId: getContent
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+        - in: path
+          name: contentId
+          description: Content Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/templateContent'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+    delete:
+      tags:
+        - Templates
+      operationId: deleteContent
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+        - in: path
+          name: contentId
+          description: Content Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/response'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      tags:
+        - Templates
+      summary: Update Template Content
+      operationId: updateContent
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: id
+          description: Template Id
+          required: true
+          type: string
+        - in: path
+          name: contentId
+          description: Template Content Id
+          required: true
+          type: string
+        - in: formData
+          name: subject
+          required: true
+          type: string
+        - in: formData
+          name: body
+          required: true
+          type: string
+        - in: formData
+          name: text
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/templateContent'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+  /emails:
+    post:
+      tags:
+        - Emails
+      summary: Sending an email
+      operationId: sendEmail
+      parameters:
+        - in: body
+          name: message
+          required: true
+          schema:
+            $ref: '#/definitions/message'
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            $ref: '#/definitions/response'
+        default:
+          description: Error Response
+          schema:
+            $ref: "#/definitions/error"
+
+definitions:
+  error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
+  response:
+    type: object
+    properties:
+      status:
+        type: boolean
+      result:
+        type: object
+
+  template:
+    type: object
+    required:
+      - id
+      - name
+      - defaultLanguage
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      defaultLanguage:
+        type: string
+      active:
+        type: boolean
+      lastMessageSentDate:
+        type: integer
+      totalMessageSent:
+        type: integer
+      created:
+        type: integer
+      modified:
+        type: integer
+      contents:
+        type: array
+        items:
+          $ref: '#/definitions/templateContentKey'
+
+  templateContentKey:
+    type: object
+    properties:
+      contentId:
+        type: string
+      lang:
+        type: string
+
+  templateContent:
+    type: object
+    required:
+      - id
+      - subject
+      - body
+    properties:
+      id:
+        type: string
+      subject:
+        type: string
+      body:
+        type: string
+        description: HTML formatted message
+      text:
+        type: string
+        description: Text formatted message
+      created:
+        type: integer
+      modified:
+        type: integer
+
+  newTemplateContent:
+      type: object
+      required:
+        - lang
+        - subject
+        - body
+      properties:
+        lang:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+          description: HTML formatted message
+        text:
+          type: string
+          description: Text formatted message
+
+  newTemplate:
+      type: object
+      required:
+        - name
+        - contents
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        contents:
+          type: array
+          items:
+            $ref: "#/definitions/newTemplateContent"
+
+  mailer:
+    type: object
+    required:
+      - emailAddress
+    properties:
+      name:
+        type: string
+      emailAddress:
+        type: string
+
+  message:
+    type: object
+    required:
+      - templateId
+      - from
+      - to
+      - data
+    properties:
+      templateId:
+        type: string
+      lang:
+        type: string
+      from:
+        $ref: "#/definitions/mailer"
+      to:
+        type: array
+        items:
+          $ref: "#/definitions/mailer"
+      replyTo:
+        type: array
+        items:
+          $ref: "#/definitions/mailer"
+      cc:
+        type: array
+        items:
+          $ref: "#/definitions/mailer"
+      bcc:
+        type: array
+        items:
+          $ref: "#/definitions/mailer"
+      data:
+        type: object
