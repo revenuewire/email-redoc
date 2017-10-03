@@ -524,6 +524,11 @@ paths:
           description: Template Id
           required: true
           type: string
+        - in: path
+          name: contentId
+          description: Content Id
+          required: true
+          type: string
         - in: body
           name: content
           schema:
