@@ -49,10 +49,53 @@ definitions:
   emailType:
     type: object
     properties:
+      title:
+        type: string
+      fid:
+        type: string
+      order:
+        type: integer
+      types:
+        type: array
+        items:
+          $ref: '#/definitions/emailTypeTemplate'
+
+  emailTypeTemplate:
+    type: object
+    properties:
+      title:
+        type: string
+      scope:
+        type: string
+        enum: [PUBLIC, PRIVATE]
+      accountId:
+        type: integer
+      productId:
+        type: integer
+      offerId:
+        type: integer
+      to:
+        type: object
+        properties:
+          name:
+            type: string
+          emailAddress:
+            type: string
+      from:
+        type: object
+        properties:
+          name:
+            type: string
+          emailAddress:
+            type: string
+      order:
+        type: integer
+      description:
+        type: string
       type:
         type: string
         description: Type name must be unique
-        enum: [GENERIC, PRODUCT_ACTIVATION, ORDER_CONFIRMATION]
+        enum: [GENERIC, PRODUCT_ACTIVATION, SUPPORT_CONTACT_US, ACCOUNT_ACTIVATION, FORGET_PASSWORD, CUSTOMER_PURCHASE_LOOKUP, CPA_APPLIED_TO_RUN, BETA_FEEDBACK, UPDATE_EMAIL_REQUEST]
       variables:
         type: array
         description: A list of variables avaiable for the type
