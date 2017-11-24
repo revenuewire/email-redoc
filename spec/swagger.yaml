@@ -315,6 +315,43 @@ definitions:
       data:
         type: object
 
+  previewContent:
+    type: object
+    required:
+      - subject
+      - body
+      - text
+    properties:
+      subject:
+        type: string
+      body:
+        type: string
+      text:
+        type: string
+      data:
+        type: string
+
+  previewResult:
+    type: object
+    properties:
+      subject:
+        type: string
+      html:
+        type: object
+        properties:
+          body:
+            type: string
+          size:
+            description: number of bytes
+            type: integer
+      text:
+        type: object
+        properties:
+          body:
+            type: string
+          size:
+            description: number of bytes
+            type: integer
 paths:
   /types:
     get:
@@ -456,6 +493,29 @@ paths:
           description: Error Response
           schema:
             $ref: "#/definitions/error"
+
+  /templates/{id}/preview:
+    post:
+      summary: Get preview of the content
+      operationId: previewTemplate
+      tags:
+        - Templates
+      parameters:
+        - name: id
+          type: string
+          in: path
+          required: true
+        - name: preview
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/previewContent'
+      responses:
+        200:
+          description: Suucess Response
+          schema:
+            $ref: '#/definitions/previewResult'
+
 
   /templates/{id}/contents:
     get:
