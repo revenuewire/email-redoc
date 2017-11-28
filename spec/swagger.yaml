@@ -236,6 +236,7 @@ definitions:
         type: integer
       scope:
         type: string
+        enum: [PUBLIC, PRIVATE]
       lang:
         type: string
       type:
@@ -261,6 +262,9 @@ definitions:
         type: string
       content:
         type: string
+      scope:
+        type: string
+        enum: [PUBLIC, PRIVATE]
 
   updateResource:
     type: object
@@ -271,6 +275,9 @@ definitions:
         type: string
       content:
         type: string
+      scope:
+        type: string
+        enum: [PUBLIC, PRIVATE]
 
   mailer:
     type: object
@@ -826,6 +833,10 @@ paths:
               description: image
               type: file
               required: true
+            - in: formData
+              name: scope
+              type: string
+              enum: ['PUBLIC', 'PRIVATE']
         responses:
             200:
               description: 'Successful responses'
